@@ -1,0 +1,27 @@
+{
+  "name": "k-map",
+  "version": "1.0.0",
+  "description": "drawing map using employees info",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JubaerHossain"
+  },
+  "keywords": [
+    "k-map"
+  ],
+  "author": "jubaer Hossain",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.9",
+    "validator": "^13.7.0"
+  }
+}
