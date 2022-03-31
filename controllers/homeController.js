@@ -6,76 +6,85 @@ const fs = require('fs');
 
 let fileUpload = (req, res, next) => { 
     try {
+        console.log(req.files);
         const { errors, isValid, data } = validateFileUploadInput(req.files);
             if(!isValid) {
                 req.app.set('errors', errors)
                 return res.redirect("/");
             }
-
-            const sampleFile = {}
-            let location_details
-            let location_employee_details
             let employee_details
-            let colleges_location_values
             csv()
             .fromFile(`./uploads/${data?.employee_details}`)
             .then((jsonObj)=>{
                 employee_details = jsonObj;
-
                 var location_details = JSON.parse(fs.readFileSync(`./uploads/${data?.location_details}`, 'utf8'));
                 var location_employee_details = JSON.parse(fs.readFileSync(`./uploads/${data?.location_employee_details}`, 'utf8'));
                 var colleges_location_values = JSON.parse(fs.readFileSync(`./uploads/${data?.colleges_location_values}`, 'utf8'));
-                // console.log('employee_details');
-                // console.log(employee_details);
-                // console.log('location_details');
-                // console.log(location_details);
-                // console.log('location_employee_details');
-                // console.log(location_employee_details);
-                // console.log('colleges_location_values');
-                // console.log(colleges_location_values);
-                //  merge the location_details  to get  employee_details and location_employee_details and colleges_location_values   dynamically
-                
-
 
                 
+                location_details['features'].forEach(feature => {
+                    let resercher =[];
+                    location_employee_details[feature.properties.loc_id].kmapids.forEach(kmapid => {
+                        employee_details.forEach(employee => {
+                            if(employee.kmapId === kmapid) {
+                                resercher.push({
+                                    kmapids: employee.kmapId,
+                                    name: employee.name,
+                                    collegeId: employee.collegeid,
+                                });
+                            }
+                        });
+                    });
+                    feature.properties.researchers = resercher;
+                    let college_values = {};
 
-                for(let i=0; i<location_details.length; i++){
-                    for(let j=0; j<location_employee_details.length; j++){
-                        if(location_details[i].location_id === location_employee_details[j].location_id){
-                            location_details[i].location_employee_details = location_employee_details[j];
+
+                    Object.keys(colleges_location_values).forEach(collegeName => {
+                        if (colleges_location_values[collegeName][feature.properties.loc_id]) {
+                            college_values[collegeName] = colleges_location_values[collegeName][feature.properties.loc_id];
+                            
                         }
-                    }
-                }
-                console.log('location_details');
-                console.log(location_details['features']);
-                console.log(location_details['features'][0].geometry);
-                //  merge the location_details and location_employee_details to get the location_employee_details_merged dynamically
+                    });
+                    feature.properties.college_values = college_values;  
+                    
+                });
 
-                 
-                
-                
-                
-                console.log(sampleFile);
+                sample_outputJson = JSON.stringify(location_details);
+                sample_outputName = Date.now()+"-"+"sample_output.json"
+                fs.writeFile("./uploads/"+sample_outputName, sample_outputJson , 'utf8', function (err) {
+                    if (err) {
+                        console.log("An error occured while writing JSON Object to File.");
+                        return console.log(err);
+                    }
+                });
+                const upload = new Uploads({
+                    location_details: data?.location_details,
+                    location_employee_details: data?.location_employee_details,
+                    employee_details: data?.employee_details,
+                    colleges_location_values: data?.colleges_location_values,
+                    sample_output: sample_outputName
+                });
+                Uploads.addUpload(upload, (err, upload) => {
+                    if (err) {
+                        req.app.set('errors', err)
+                        return res.redirect("/");
+                    } else {  
+                        console.log(upload);  
+                        return res.redirect("/download?file=" + upload?._id);
+                    }
+                });
+                console.log(upload);
+                return res.redirect("/download?file=" + upload?._id);
  
                 
             }).catch((err)=>{
+                console.log('err');
                 console.log(err);
             })
-
-            // var upload = new Uploads(data)
-            // Uploads.addUpload(upload, (err, upload) => {
-            //     if (err) {
-            //         req.app.set('errors', err)
-            //         return res.redirect("/");
-            //     } else {
-
-            //         return res.redirect("/download?file=" + upload?._id);
-            //     }
-            // });
-            // return res.redirect("/download?file=" + upload?._id);
+    console.log(req.files);
+           
     }
     catch(err) {
-        process.exit(0);
         req.app.set('errors', err)
         return res.redirect("/");
     }      
@@ -83,14 +92,18 @@ let fileUpload = (req, res, next) => {
 
 
 let download = async (req, res) =>{
+    const file = req.query.id;
     try {        
-        const file = req.query.id;
-        const upload = await Uploads.find({_id:file}).exec();
-        const filePath = `./uploads/${upload[0].location_details}`;
+        console.log(file);
+
+        const upload = await Uploads.findById(file);
+        console.log(upload);
+        const filePath = `./uploads/${upload[0].sample_output}`;
         res.download(filePath);
         
     }
     catch(err) {
+        process.exit(0);
         req.app.set('errors', err)
         return res.redirect("/download ?file=" + file);
     }

@@ -1,0 +1,30 @@
+{
+        "1002": {
+            "loc_id": "1002",
+            "kmapids": [
+                "palmerjo",
+                "cwesterl",
+                "lumbee"
+            ]
+        },
+        "1001": {
+            "loc_id": "1001",
+            "kmapids": [
+                "skaib",
+                "dcorso",
+                "ghuck",
+                "macmccallum"
+            ]
+        },
+        "1003": {
+            "loc_id": "1003",
+            "kmapids": [
+                "ghuck",
+                "cwesterl",
+                "dcorso",
+                "witte",
+                "lumbee"
+            ]
+        }
+    
+}

@@ -17,6 +17,10 @@ const UploadSchema = new Schema({
     },
     colleges_location_values: {
         type: String,
+        required: true
+    },
+    sample_output: {
+        type: String,
     }
 });
 
