@@ -6,10 +6,27 @@ const bodyParser = require('body-parser');
 const routes = require('./routes/index.js');
 const path    = require('path');
 const multer = require('multer');
-const upload = new multer({dest:'uploads/'});
+
 const app = express();
 const router = express.Router();
-
+const upload = new multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, 'uploads/');
+        },
+        filename: function (req, file, cb) {
+            cb(null, file.originalname);
+        }
+    }),
+    fileFilter: function (req, file, cb) {
+        if (file.mimetype == 'text/csv' || file.mimetype == 'application/json') {
+            cb(null, true);
+        }
+         else {
+            cb(null, false);
+        }
+    }
+});
 const environment = process.env.NODE_ENV;
 const enVal = process.env;
 
@@ -31,8 +48,19 @@ if (environment != 'production') {
     }
 
 app.get('/', function(req, res) { 
-        res.render('pages/index', {errors: req.app.get('errors')});
+        res.render('pages/index', {
+            errors: req.app.get('errors')
+        });
         req.app.set('errors', '');
+});
+
+app.get('/download', function(req, res) { 
+    res.render('pages/download', {
+        errors: req.app.get('errors'),
+        url :  '/api/v1/download?id='+req.query.file ?? ''
+
+});
+    req.app.set('errors', '');
 });
 
 

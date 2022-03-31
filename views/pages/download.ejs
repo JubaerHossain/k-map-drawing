@@ -1,0 +1,21 @@
+<%- include('../partials/head') %>
+<body>
+  <div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>File upload</h1>
+  </div>
+
+  <div class="container mt-5">
+    <div class="d-flex justify-content-center">
+      <div class="col-sm-6">
+        <% if (errors?.message) { %>
+        <small class="pt-2 pb-2 text-success pb-5"
+            ><%= errors?.message %></small
+        >
+        <% }         
+        %>
+          <a type="submit" href="<%= url %>"  class="btn btn-primary">Download</a>
+      </div>
+    </div>
+  </div>
+</body>
+<%- include('../partials/footer') %>
