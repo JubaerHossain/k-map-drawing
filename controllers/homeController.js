@@ -12,7 +12,6 @@ let fileUpload = (req, res, next) => {
             Uploads.addUpload(upload, (err, upload) => {
                 if (err) {
                     req.app.set('errors', err)
-                    process.exit(0);
                     return res.redirect("/");
                 } else {
                     return res.redirect("/download?file=" + upload?._id);
@@ -21,8 +20,6 @@ let fileUpload = (req, res, next) => {
             return res.redirect("/download?file=" + upload?._id);
     }
     catch(err) {
-        console.log(err);
-        process.exit(0);
         req.app.set('errors', err)
         return res.redirect("/");
     }      
