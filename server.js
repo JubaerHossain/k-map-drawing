@@ -21,19 +21,14 @@ app.set('view engine', 'ejs');
 if (environment != 'production') {
     app.use(logger('dev'));
 }
-    // try {
-    //      mongoose.connect(enVal.DB_HOST, {
-    //         useNewUrlParser: true,
-    //         useUnifiedTopology: true,
-    //         useFindAndModify: false,
-    //         useCreateIndex: true
-    //       });
-    //     console.log("MongoDB Conected")
-    // } catch (err) {
-    //     console.error('err.message');
-    //     console.error(err.message);
-    //     process.exit(1);
-    // }
+    try {
+         mongoose.connect(enVal.DB_HOST);
+         console.log("MongoDB Conected")
+    } catch (err) {
+        console.error('err.message');
+        console.error(err.message);
+        process.exit(1);
+    }
 
 app.get('/', function(req, res) {      
     res.render('pages/index');
