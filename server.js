@@ -30,9 +30,10 @@ if (environment != 'production') {
         process.exit(1);
     }
 
-app.get('/', function(req, res) {      
-    res.render('pages/index');
-    });
+app.get('/', function(req, res) { 
+        res.render('pages/index', {errors: req.app.get('errors')});
+        req.app.set('errors', '');
+});
 
 
 app.use('/api/v1', routes(router));
