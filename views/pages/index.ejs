@@ -1,0 +1,53 @@
+<%- include('../partials/head') %>
+<body>
+  <div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>File upload</h1>
+  </div>
+
+  <div class="container mt-5">
+    <div class="d-flex justify-content-center">
+      <div class="col-sm-6">
+        <form
+          action="/api/v1/file-upload"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group mb-3">
+            <label for="location_details"
+              >Location Details <font color="red">*</font></label
+            >
+            <input type="file" class="form-control" id="location_details" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="location_employee_details"
+              >Location Employee Details <font color="red">*</font></label
+            >
+            <input
+              type="file"
+              class="form-control"
+              id="location_employee_details"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="employee_details"
+              >Employee Details <font color="red">*</font></label
+            >
+            <input type="file" class="form-control" id="employee_details" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="colleges_location_values"
+              >Colleges Location Values <font color="red">*</font></label
+            >
+            <input
+              type="file"
+              class="form-control"
+              id="colleges_location_values"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+<%- include('../partials/footer') %>
