@@ -94,16 +94,12 @@ let fileUpload = (req, res, next) => {
 let download = async (req, res) =>{
     const file = req.query.id;
     try {        
-        console.log(file);
-
         const upload = await Uploads.findById(file);
-        console.log(upload);
-        const filePath = `./uploads/${upload[0].sample_output}`;
+        const filePath = `./uploads/${upload.sample_output}`;
         res.download(filePath);
         
     }
     catch(err) {
-        process.exit(0);
         req.app.set('errors', err)
         return res.redirect("/download ?file=" + file);
     }
