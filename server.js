@@ -54,6 +54,14 @@ app.get('/', function(req, res) {
         req.app.set('errors', '');
 });
 
+app.get('/list', function(req, res) { 
+    
+    res.render('pages/list', {
+        errors: req.app.get('errors')
+    });
+    req.app.set('errors', '');
+});
+
 app.get('/download', function(req, res) { 
     res.render('pages/download', {
         errors: req.app.get('errors'),
