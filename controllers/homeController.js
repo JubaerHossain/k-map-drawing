@@ -70,11 +70,10 @@ let fileUpload = (req, res, next) => {
                         return res.redirect("/");
                     } else {  
                         console.log(upload);  
-                        return res.redirect("/download?file=" + upload?._id);
+                        return res.redirect("/list");
                     }
                 });
-                console.log(upload);
-                return res.redirect("/download?file=" + upload?._id);
+                return res.redirect("/list");
  
                 
             }).catch((err)=>{
@@ -96,12 +95,22 @@ let download = async (req, res) =>{
     try {        
         const upload = await Uploads.findById(file);
         const filePath = `./uploads/${upload.sample_output}`;
-        res.download(filePath);
+        if (fs.existsSync(filePath)) {
+            res.download(filePath);
+        }else{
+
+            req.app.set('errors', {
+                message: "File not found"
+            })
+            return res.redirect("/list");
+        }
         
     }
     catch(err) {
-        req.app.set('errors', err)
-        return res.redirect("/download ?file=" + file);
+        req.app.set('errors', {
+            message: "something went wrong"
+        })
+        return res.redirect("/list");
     }
 };
 

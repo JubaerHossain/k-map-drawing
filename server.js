@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const routes = require('./routes/index.js');
 const path    = require('path');
 const multer = require('multer');
+const Uploads = require('./models/uploadModel');
 
 const app = express();
 const router = express.Router();
@@ -54,25 +55,53 @@ app.get('/', function(req, res) {
         req.app.set('errors', '');
 });
 
-app.get('/list', function(req, res) { 
-    
+app.get('/list', async function (req, res) { 
+   try {
+    const uploads = await Uploads.find({})
+    .sort({ _id: 'DESC' })
+    .exec();
     res.render('pages/list', {
+        data: uploads,
         errors: req.app.get('errors')
     });
     req.app.set('errors', '');
+       
+   } catch (error) {
+    res.render('pages/list', {
+        errors: error.message
+
+    });
+       
+   }
+    
 });
 
 app.get('/download', function(req, res) { 
+   try {
     res.render('pages/download', {
         errors: req.app.get('errors'),
         url :  '/api/v1/download?id='+req.query.file ?? ''
 
-});
-    req.app.set('errors', '');
+     });
+    req.app.set('errors', ''); 
+   } catch (error) {
+    res.render('pages/list', {
+        errors: error.message
+
+    });
+       
+       
+   }
 });
 
 
 app.use('/api/v1', routes(router));
+
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+  });
 
 const PORT = enVal.PORT || 8080;
 app.listen(PORT, () => {
