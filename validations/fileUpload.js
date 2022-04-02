@@ -8,7 +8,7 @@ function jsonValidator(file){
     return true;
 }
 function csvValidator(file){
-    if(file.mimetype !== 'text/csv') {
+    if(file.mimetype !== 'text/csv' && file.mimetype !== 'application/vnd.ms-excel') {
         return false;
     }
     return true;
@@ -23,25 +23,25 @@ module.exports = function validateFileUploadInput(files) {
                 if (Validator.isEmpty(file.fieldname)) {
                     errors.location_details = 'Location details is required';
                 }
-                jsonValidator(file) ? data.location_details = file.originalname : errors.location_details = 'Only json file are allowed';
+                jsonValidator(file) ? data.location_details = file.filename : errors.location_details = 'Only json file are allowed';
                 break;
             case 'location_employee_details':
                 if (Validator.isEmpty(file.fieldname)) {
                     errors.location_employee_details = 'Location employee details is required';
                 }
-                jsonValidator(file) ? data.location_employee_details = file.originalname : errors.location_employee_details = 'Only json file are allowed';
+                jsonValidator(file) ? data.location_employee_details = file.filename : errors.location_employee_details = 'Only json file are allowed';
                 break;
             case 'employee_details':
                 if (Validator.isEmpty(file.fieldname)) {
                     errors.employee_details = 'Employee details is required';
                 }
-                csvValidator(file) ? data.employee_details = file.originalname : errors.employee_details = 'Only csv file are allowed';
+                csvValidator(file) ? data.employee_details = file.filename : errors.employee_details = 'Only csv file are allowed';
                 break;
             case 'colleges_location_values':
                 if (Validator.isEmpty(file.fieldname)) {
                     errors.colleges_location_values = 'Colleges location values is required';
                 }
-                jsonValidator(file) ? data.colleges_location_values = file.originalname : errors.colleges_location_values = 'Only json file are allowed';
+                jsonValidator(file) ? data.colleges_location_values = file.filename : errors.colleges_location_values = 'Only json file are allowed';
                 break;
             default:
                 break;

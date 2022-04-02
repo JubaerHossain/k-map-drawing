@@ -15,11 +15,11 @@ const upload = new multer({
             cb(null, 'uploads/');
         },
         filename: function (req, file, cb) {
-            cb(null, file.originalname);
+            cb(null, Date.now()+'-'+file.originalname);
         }
     }),
     fileFilter: function (req, file, cb) {
-        if (file.mimetype == 'text/csv' || file.mimetype == 'application/json') {
+        if (file.mimetype == 'text/csv' || file.mimetype == 'application/json' || file.mimetype == 'application/vnd.ms-excel') {
             cb(null, true);
         }
          else {
